@@ -57,14 +57,14 @@ letters like `P`, `Q`, `R` denote propositions
 with `h` like `h1` or `hP` are proofs or hypotheses.
 
 -/
-
 -- Throughout this sheet, `P`, `Q` and `R` will denote propositions.
 variable (P Q R : Prop)
 
 -- Here are some examples of `intro`, `exact` and `apply` being used.
 -- Assume that `P` and `Q` and `R` are all true. Deduce that `P` is true.
-example (hP : P) (hQ : Q) (hR : R) : P := by
+example (hP : P) : P := by
   -- note that `exact P` does *not* work. `P` is the proposition, `hP` is the proof.
+  -- P is true because Hp is true and exact hP is the proof that P is true.
   exact hP
   done
 
@@ -78,7 +78,7 @@ example (fish : P) (giraffe : Q) (dodecahedron : R) : P := by
 -- Assume `Q` is true. Prove that `P → Q`.
 example (hQ : Q) : P → Q := by
   -- The goal is of the form `X → Y` so we can use `intro`
-  intro h
+  intro h1
   -- now `h` is the hypothesis that `P` is true.
   -- Our goal is now the same as a hypothesis so we can use `exact`
   exact hQ
@@ -145,7 +145,10 @@ example : P → Q → P := by
 /-- If we know `P`, and we also know `P → Q`, we can deduce `Q`.
 This is called "Modus Ponens" by logicians. -/
 example : P → (P → Q) → Q := by
-  sorry
+  intro h
+  intro h1
+  apply h1
+  exact h
   done
 
 /-- `→` is transitive. That is, if `P → Q` and `Q → R` are true, then

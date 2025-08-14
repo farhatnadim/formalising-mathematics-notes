@@ -57,17 +57,16 @@ letters like `P`, `Q`, `R` denote propositions
 with `h` like `h1` or `hP` are proofs or hypotheses.
 
 -/
+
 -- Throughout this sheet, `P`, `Q` and `R` will denote propositions.
 variable (P Q R : Prop)
 
 -- Here are some examples of `intro`, `exact` and `apply` being used.
 -- Assume that `P` and `Q` and `R` are all true. Deduce that `P` is true.
-example (hP : P) : P := by
-  -- note that `exact P` does *not* work. `P` is the proposition, `hP` is the proof.
-  -- P is true because Hp is true and exact hP is the proof that P is true.
-  exact hP
-  done
+example (hp: P) : P := by
+ exact hp
 
+  -- note that `exact P` does *not* work. `P` is the proposition, `hP` is the proof.
 -- Same example: assume that `P` and `Q` and `R` are true, but this time
 -- give the assumptions silly names. Deduce that `P` is true.
 example (fish : P) (giraffe : Q) (dodecahedron : R) : P := by
@@ -78,7 +77,7 @@ example (fish : P) (giraffe : Q) (dodecahedron : R) : P := by
 -- Assume `Q` is true. Prove that `P → Q`.
 example (hQ : Q) : P → Q := by
   -- The goal is of the form `X → Y` so we can use `intro`
-  intro h1
+  intro h
   -- now `h` is the hypothesis that `P` is true.
   -- Our goal is now the same as a hypothesis so we can use `exact`
   exact hQ
@@ -138,29 +137,46 @@ So the next level is asking you prove that `P → (Q → P)`.
 
 -/
 example : P → Q → P := by
-  intro hP hQ
-  exact hP
+  intro hp
+  intro hq
+  exact hp
   done
 
 /-- If we know `P`, and we also know `P → Q`, we can deduce `Q`.
 This is called "Modus Ponens" by logicians. -/
 example : P → (P → Q) → Q := by
-  intro h
-  intro h1
-  apply h1
-  exact h
-  done
+ intro hp
+ intro hpq
+ apply hpq
+ exact hp
+ done
+
+
 
 /-- `→` is transitive. That is, if `P → Q` and `Q → R` are true, then
   so is `P → R`. -/
 example : (P → Q) → (Q → R) → P → R := by
-  sorry
+  intro hp
+  intro hq
+  intro hr
+  apply hq
+  apply hp
+  exact hr
   done
+
+
+
 
 -- If `h : P → Q → R` with goal `⊢ R` and you `apply h`, you'll get
 -- two goals! Note that tactics operate on only the first goal.
 example : (P → Q → R) → (P → Q) → P → R := by
-  sorry
+  intro hpqr
+  intro hqp
+  intro hp
+  apply hpqr
+  exact hp
+  apply hqp
+  exact hp
   done
 
 /-

@@ -54,32 +54,42 @@ example : (True → False) → False := by
 
 example : False → P := by
   intro h
-  exfalso
-  exact h
+  cases h
   done
 
 example : True → False → True → False → True → False := by
-  sorry
+  intro h1
+  intro h2
+  intro h3
+  intro h4
+  intro h5
+  trivial
   done
 
 example : P → (P → False) → False := by
-  sorry
+  intro hp
+  intro hfalse
+  apply hfalse
+  exact hp
   done
 
 example : (P → False) → P → Q := by
-  sorry
+  intro h1
+  intro Hp
+  trivial
   done
+
+
 
 example : (True → False) → P := by
   intro h1
-  have h3 : False := by
+  have h2 : False := by
     apply h1
     trivial
   -- have h2 : True := by
   --   trivial
   -- apply h1 at h2
-  exfalso
-  exact h3
+  trivial
   -- apply h1
   -- trivial
   -- done

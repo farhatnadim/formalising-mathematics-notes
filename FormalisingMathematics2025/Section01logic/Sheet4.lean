@@ -22,21 +22,33 @@ and also the following tactics:
 
 -/
 
+
+
 -- Throughout this sheet, `P`, `Q` and `R` will denote propositions.
 variable (P Q R : Prop)
 
 example : P ∧ Q → P := by
   intro h
-  cases h with
-  | intro left right => exact left
+  cases' h with h1 h2
+  exact h1
   done
 
 example : P ∧ Q → Q := by
-  sorry
+  intro h1
+  cases h1 with
+  | intro left right
+  exact right
   done
 
 example : (P → Q → R) → P ∧ Q → R := by
-  sorry
+  intro h1 h2
+  apply h1
+  cases h2 with
+  | intro left right
+  exact left
+  cases h2 with
+  | intro left right
+  exact right
   done
 
 example : P → Q → P ∧ Q := by
@@ -48,22 +60,39 @@ example : P → Q → P ∧ Q := by
 
 /-- `∧` is symmetric -/
 example : P ∧ Q → Q ∧ P := by
-  sorry
+  intro h1
+  cases h1 with
+  | intro left right
+  constructor<;> assumption
   done
+
+
 
 example : P → P ∧ True := by
-  sorry
-  done
+  intro h1
+  by_cases h2 : P
+  tauto
+  by_contra h2
+  apply h2
+  tauto
+
+
 
 example : False → P ∧ False := by
-  sorry
-  done
+  exact False.elim
 
 /-- `∧` is transitive -/
 example : P ∧ Q → Q ∧ R → P ∧ R := by
-  sorry
-  done
+  rintro ⟨h1, h2⟩
+  intro h3
+  constructor <;>
+  cases' h3 with h4 h5
+  assumption
+  assumption
+
 
 example : (P ∧ Q → R) → P → Q → R := by
-  sorry
+  tauto
+
+
   done

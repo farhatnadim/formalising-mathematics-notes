@@ -80,15 +80,19 @@ example (hQ : Q) : P → Q := by
   intro h
   -- now `h` is the hypothesis that `P` is true.
   -- Our goal is now the same as a hypothesis so we can use `exact`
-  exact hQ
+  --exact hQ
   -- note `exact Q` doesn't work: `exact` takes the *term*, not the type.
+  exact hQ
+
   done
 
 -- Assume `P → Q` and `P` is true. Deduce `Q`.
 example (h : P → Q) (hP : P) : Q := by
   -- `hP` says that `P` is true, and `h` says that `P` implies `Q`, so `apply h at hP` will change
   -- `hP` to a proof of `Q`.
-  apply h at hP
+  apply h at hP -- apply forward take the true proposition of implication as input ,
+  -- and the hypothesis
+  -- that antecedant is true and Says , switches the antecedant to conclusion (1,1 in truth table)
   -- now `hP` is a proof of `Q` so that's exactly what we want.
   exact hP
   done
@@ -102,7 +106,7 @@ example (h : P → Q) (hP : P) : Q := by
 -- Assume `P → Q` and `P` is true. Deduce `Q`.
 example (h : P → Q) (hP : P) : Q := by
   -- `h` says that `P` implies `Q`, so to prove `Q` (our goal) it suffices to prove `P`.
-  apply h
+  apply h -- apply backward
   -- Our goal is now `⊢ P`.
   exact hP
   done
@@ -128,7 +132,9 @@ might not be equivalent. This is like subtraction on numbers -- in general
 `a - (b - c)` and `(a - b) - c` might not be equal.
 
 So if we write `P → Q → R` then we'd better know what this means.
-The convention in Lean is that it means `P → (Q → R)`. If you think
+The convention in Lean is that it means `P → (Q
+example :
+→ R)`. If you think
 about it, this means that to deduce `R` you will need to prove both `P`
 and `Q`. In general to prove `P1 → P2 → P3 → ... Pn` you can assume
 `P1`, `P2`,...,`P(n-1)` and then you have to prove `Pn`.
@@ -137,18 +143,16 @@ So the next level is asking you prove that `P → (Q → P)`.
 
 -/
 example : P → Q → P := by
-  intro hp
-  intro hq
+  intro hp hq
   exact hp
   done
 
 /-- If we know `P`, and we also know `P → Q`, we can deduce `Q`.
 This is called "Modus Ponens" by logicians. -/
 example : P → (P → Q) → Q := by
- intro hp
- intro hpq
- apply hpq
- exact hp
+ intro h1 h2
+ apply h2 at h1
+ exact h1
  done
 
 
@@ -156,12 +160,10 @@ example : P → (P → Q) → Q := by
 /-- `→` is transitive. That is, if `P → Q` and `Q → R` are true, then
   so is `P → R`. -/
 example : (P → Q) → (Q → R) → P → R := by
-  intro hp
-  intro hq
-  intro hr
-  apply hq
-  apply hp
-  exact hr
+  intro h1 h2 h3
+  apply h2
+  apply h1
+  exact h3
   done
 
 
@@ -170,13 +172,11 @@ example : (P → Q) → (Q → R) → P → R := by
 -- If `h : P → Q → R` with goal `⊢ R` and you `apply h`, you'll get
 -- two goals! Note that tactics operate on only the first goal.
 example : (P → Q → R) → (P → Q) → P → R := by
-  intro hpqr
-  intro hqp
-  intro hp
-  apply hpqr
-  exact hp
-  apply hqp
-  exact hp
+  intro h1 h2 h3
+  apply h1
+  exact h3
+  apply h2
+  exact h3
   done
 
 /-
@@ -191,27 +191,54 @@ in this section, where you'll learn some more tactics.
 variable (S T : Prop)
 
 example : (P → R) → (S → Q) → (R → T) → (Q → R) → S → T := by
-  sorry
+  intro h1 h2 h3 h4 h5
+  apply h3
+  apply h4
+  apply h2
+  exact h5
   done
 
 example : (P → Q) → ((P → Q) → P) → Q := by
-  sorry
+  intro h1 h2
+  apply h1
+  apply h2 at h1
+  exact h1
   done
 
 example : ((P → Q) → R) → ((Q → R) → P) → ((R → P) → Q) → P := by
-  sorry
+  intro h1 h2 h3
+  apply h2
+  intro h4
+  apply h1
+  intro h1
+  exact h4
   done
 
 example : ((Q → P) → P) → (Q → R) → (R → P) → P := by
-  sorry
+  intro h1 h2 h3
+  apply h1
+  intro h4
+  apply h3
+  apply h2
+  exact h4
   done
 
 example : (((P → Q) → Q) → Q) → P → Q := by
-  sorry
+  intro h1 h2
+  apply h1
+  intro h3
+  apply h3 at h2
+  exact h2
   done
 
 example :
     (((P → Q → Q) → (P → Q) → Q) → R) →
       ((((P → P) → Q) → P → P → Q) → R) → (((P → P → Q) → (P → P) → Q) → R) → R := by
-  sorry
+
+  intro h1 h2 h3
+  apply h2
+  intro h4 h5 h6
+  apply h4
+  intro h7
+  exact h7
   done

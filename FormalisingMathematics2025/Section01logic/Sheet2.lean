@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Kevin Buzzard
 -/
 import Mathlib.Tactic -- imports all the Lean tactics
-
+open Classical
 /-!
 
 # Logic in Lean, example sheet 2 : `True` and `False`
@@ -29,7 +29,6 @@ variable (P Q R : Prop)
 
 example : True := by
   trivial
-  done
 
 example : True → True := by
   intro h
@@ -55,42 +54,31 @@ example : (True → False) → False := by
 example : False → P := by
   intro h
   cases h
-  done
+
+
+
 
 example : True → False → True → False → True → False := by
-  intro h1
-  intro h2
-  intro h3
-  intro h4
-  intro h5
-  trivial
-  done
+  intro h1 h2 h3 h4 h5
+  assumption
+
 
 example : P → (P → False) → False := by
-  intro hp
-  intro hfalse
-  apply hfalse
-  exact hp
+  intro h1 h2
+  apply h2
+  exact h1
   done
 
 example : (P → False) → P → Q := by
-  intro h1
-  intro Hp
-  trivial
-  done
+  intro h1 h2
+  exfalso
+  apply h1
+  exact h2
+
 
 
 
 example : (True → False) → P := by
   intro h1
-  have h2 : False := by
-    apply h1
-    trivial
-  -- have h2 : True := by
-  --   trivial
-  -- apply h1 at h2
+  exfalso
   trivial
-  -- apply h1
-  -- trivial
-  -- done
-  done

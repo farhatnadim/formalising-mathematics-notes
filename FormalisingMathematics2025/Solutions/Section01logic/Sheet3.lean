@@ -67,7 +67,7 @@ example : P → ¬¬P := by
   intro hP
   intro hnP
   apply hnP
-  exact hP
+  assumption
 
 example : (P → Q) → ¬Q → ¬P := by
   intro hPQ hnQ hP

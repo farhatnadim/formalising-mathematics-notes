@@ -59,7 +59,7 @@ example : True → False → True → False → True → False := by
 example : P → (P → False) → False := by
   intro hP h
   apply h
-  assumption
+  exact hP
 
 example : (P → False) → P → Q := by
   intro h1 h2
